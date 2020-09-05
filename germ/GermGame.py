@@ -54,15 +54,15 @@ class GermGame(Game):
 
     def getValidMoves(self, board, player):
         # return a fixed size binary vector
-        valids = [0]*self.getActionSize()
+        valids = [0]*(self.getActionSize())
         b = Board(self.n)
         b.pieces = np.copy(board)
         legalMoves = b.get_legal_moves(player)
         if len(legalMoves) == 0:
             valids[-1] = 1
             return np.array(valids)
-        for x, y in legalMoves:
-            valids[self.n*x+y]=1
+        for key in legalMoves:
+            valids[key] = 1
         return np.array(valids)
 
     def getGameEnded(self, board, player):
@@ -84,8 +84,18 @@ class GermGame(Game):
 
     def getSymmetries(self, board, pi):
         # mirror, rotational
-        assert(len(pi) == self.n**2+1)  # 1 for pass
-        pi_board = np.reshape(pi[:-1], (self.n, self.n))
+        # assert(len(pi) == self.n**2+1)  # 1 for pass
+        # print(pi)
+        # print(pi)
+
+        assert(len(pi) == len(dict))
+
+
+
+        # pi_board = np.reshape(pi[:-1], (self.n, self.n))
+
+        pi_board = dict[pi]
+
         l = []
 
         for i in range(1, 5):

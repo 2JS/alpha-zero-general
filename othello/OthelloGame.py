@@ -5,6 +5,7 @@ from Game import Game
 from .OthelloLogic import Board
 import numpy as np
 
+
 class OthelloGame(Game):
     square_content = {
         -1: "X",
@@ -17,6 +18,7 @@ class OthelloGame(Game):
         return OthelloGame.square_content[piece]
 
     def __init__(self, n):
+        super().__init__()
         self.n = n
 
     def getInitBoard(self):
@@ -26,7 +28,7 @@ class OthelloGame(Game):
 
     def getBoardSize(self):
         # (a,b) tuple
-        return (self.n, self.n)
+        return self.n, self.n
 
     def getActionSize(self):
         # return number of actions
@@ -36,20 +38,20 @@ class OthelloGame(Game):
         # if player takes action on board, return next (board,player)
         # action must be a valid move
         if action == self.n*self.n:
-            return (board, -player)
+            return board, -player
         b = Board(self.n)
         b.pieces = np.copy(board)
         move = (int(action/self.n), action%self.n)
         b.execute_move(move, player)
-        return (b.pieces, -player)
+        return b.pieces, -player
 
     def getValidMoves(self, board, player):
         # return a fixed size binary vector
         valids = [0]*self.getActionSize()
         b = Board(self.n)
         b.pieces = np.copy(board)
-        legalMoves =  b.get_legal_moves(player)
-        if len(legalMoves)==0:
+        legalMoves = b.get_legal_moves(player)
+        if len(legalMoves) == 0:
             valids[-1]=1
             return np.array(valids)
         for x, y in legalMoves:
@@ -57,7 +59,7 @@ class OthelloGame(Game):
         return np.array(valids)
 
     def getGameEnded(self, board, player):
-        # return 0 if not ended, 1 if player 1 won, -1 if player 1 lost
+        # return 0 if not ended, 1 if {player 1} won, -1 if {player 1} lost
         # player = 1
         b = Board(self.n)
         b.pieces = np.copy(board)
