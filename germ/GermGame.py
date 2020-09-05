@@ -2,8 +2,10 @@ from __future__ import print_function
 import sys
 sys.path.append('..')
 from Game import Game
-from .GermLogic import Board
+from .GermLogic import Board, dict
 import numpy as np
+
+
 
 class GermGame(Game):
     square_content = {
@@ -31,16 +33,22 @@ class GermGame(Game):
 
     def getActionSize(self):
         # return number of actions
-        return self.n*self.n + 1
+        return len(dict)
 
     def getNextState(self, board, player, action):
+        # 0 <= action < 290
         # if player takes action on board, return next (board,player)
         # action must be a valid move
-        if action == self.n*self.n:
-            return board, -player
+
+        # if action == 289:
+        #     return board, -player
+
         b = Board(self.n)
         b.pieces = np.copy(board)
-        move = (int(action/self.n), action%self.n)
+
+        # sic
+        move = dict[action]
+
         b.execute_move(move, player)
         return b.pieces, -player
 
@@ -114,7 +122,7 @@ class GermGame(Game):
             print(y, "|", end="")    # print the row #
             for x in range(n):
                 piece = board[y][x]    # get the piece to print
-                print(OthelloGame.square_content[piece], end=" ")
+                print(GermGame.square_content[piece], end=" ")
             print("|")
 
         print("-----------------------")
