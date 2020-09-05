@@ -8,6 +8,9 @@
 # checkpoint
 checkpoints/
 
+# virtualenv
+venv/
+
 # For PyCharm users
 .idea/
 
