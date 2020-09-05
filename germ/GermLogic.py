@@ -74,23 +74,7 @@ class Board:
                 if self[x][y] == 0 and self[x+dx][y+dy] == color:
                     moves.update(((x, y), (dx, dy)))
 
-        return moves
-
-        # # Get all the squares with pieces of the given color.
-        # for y in range(self.n):
-        #     for x in range(self.n):
-        #         if self[x][y] == color:
-        #             newmoves = []
-        #             for j in range(max(y - 2, 0), min(y + 3, 7)):
-        #                 for i in range(max(x - 2, 0), min(x + 3, 7)):
-        #                     if self[i][j] == "0":
-        #                         if max(abs(y - j), abs(x - i)) == 1:
-        #                             newmoves.append((i, j, 1))
-        #                             moves.update(newmoves)
-        #                         if max(abs(y - j), abs(x - i)) == 2:
-        #                             newmoves.append((i, j, 2))
-        #                             moves.update(newmoves)
-        # return list(moves)
+        return list(moves)
 
     def has_legal_moves(self, color):
         return len(self.get_legal_moves(color)) > 0
