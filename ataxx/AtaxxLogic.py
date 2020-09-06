@@ -1,10 +1,11 @@
 # Created by Lee, Jun Seok <lego3410@gmail.com> at Sep 6, 2020
 
-class Board:
-  __directions_1 = [(1,1),(1,0),(1,-1),(0,-1),(-1,-1),(-1,0),(-1,1),(0,1)]
-  __directions_2 = [(2,2),(2,1),(2,0),(2,-1),(2,-2),(1,-2),(0,-2),(-1,-2),(-2,-2),(-2,-1),(-2,0),(-2,1),(-2,2),(-1,2),(0,2),(1,2)]
+_directions_1 = [(1,1),(1,0),(1,-1),(0,-1),(-1,-1),(-1,0),(-1,1),(0,1)]
+_directions_2 = [(2,2),(2,1),(2,0),(2,-1),(2,-2),(1,-2),(0,-2),(-1,-2),(-2,-2),(-2,-1),(-2,0),(-2,1),(-2,2),(-1,2),(0,2),(1,2)]
 
-  def __init__(self, n):
+
+class Board:
+  def __init__(self, n=7):
     self.n = n
     self.pieces = [[0]*self.n for _ in range(self.n)]
 
@@ -29,15 +30,19 @@ class Board:
     return count
   
   def get_legal_moves(self, color):
+    moves = []
     for x0 in range(self.n):
       for y0 in range(self.n):
         for x1 in range(self.n):
           for y1 in range(self.n):
             dx = x1 - x0
             dy = y1 - y0
-            if self[x0][y0] = color and self[x1][y1] == 0:
-              if (dx, dy) in self.__directions_1 or (dx, dy) in self.__directions_2:
-                yield x0, y0, x1, y1
+            if self[x0][y0] == color and self[x1][y1] == 0:
+              if (dx, dy) in _directions_1:
+                moves.append((0, 0, x1, y1))
+              elif (dx, dy) in _directions_2:
+                moves.append((x0, y0, x1, y1))
+    return moves
 
   def has_legal_moves(self, color):
     for x0 in range(self.n):
@@ -46,8 +51,8 @@ class Board:
           for y1 in range(self.n):
             dx = x1 - x0
             dy = y1 - y0
-            if self[x0][y0] = color and self[x1][y1] == 0:
-              if (dx, dy) in self.__directions_1 or (dx, dy) in self.__directions_2:
+            if self[x0][y0] == color and self[x1][y1] == 0:
+              if (dx, dy) in _directions_1 or (dx, dy) in _directions_2:
                 return True
     
     return False
@@ -57,15 +62,15 @@ class Board:
     dx, dy = x1-x0, y1-y0
     
     assert not (dx == dy == 0)
-    assert -2 <= dx <= 2 and -2 <= dy <= 2
+    assert (-2 <= dx <= 2 and -2 <= dy <= 2) or (x0 == y0 == 0)
     assert self[x0][y0] == color
     assert self[x1][y1] == 0
 
-    for dx, dy in self.__directions_1:
-      if self[x1+dx][y1+dy] == -color:
-        self[x1+dx][y1+dy] = color
+    for _dx, _dy in _directions_1:
+      if self[x1+_dx][y1+_dy] == -color:
+        self[x1+_dx][y1+_dy] = color
 
-    if (dx, dy) in self.__directions_2:
+    if (dx, dy) in _directions_2:
       self[x0][y0] = 0
     
     self[x1][y1] = color

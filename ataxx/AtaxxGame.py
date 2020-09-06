@@ -2,7 +2,7 @@
 import sys
 sys.path.append('..')
 from Game import Game
-from .AtaxxLogic import Board
+from .AtaxxLogic import Board, _directions_1, _directions_2
 import numpy as np
 
 
@@ -10,13 +10,13 @@ action2move = {}
 i = 0
 
 for x in range(7):
-  for y in range(7:
+  for y in range(7):
     action2move[i] = 0, 0, x, y
     i += 1
 
 for x in range(7):
   for y in range(7):
-    for dx, dy in Board.__directions_2:
+    for dx, dy in _directions_2:
       if {x, y, x+dx, y+dy} <= set(range(7)):
         action2move[i] = x, y, x+dx, y+dy
         i += 1
@@ -35,7 +35,7 @@ class AtaxxGame(Game):
   def getSquarePiece(piece):
     return AtaxxGame.square_content[piece]
   
-  def __init__(self):
+  def __init__(self, n):
     pass
   
   def getInitBoard(self):
