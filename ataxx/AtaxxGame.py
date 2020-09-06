@@ -7,6 +7,8 @@ import numpy as np
 
 
 action2move = []
+action90rot = []
+actionflip = []
 
 for x in range(7):
   for y in range(7):
@@ -21,6 +23,18 @@ for x in range(7):
 action2move.append((None, None, None, None))
 
 move2action = {e:i for i, e in enumerate(action2move)}
+
+for x0, y0, x1, y1 in action2move:
+  actionflip.append(move2action[(x0, (6-y0) if (y0 != None) else None, x1, (6-y1) if (y1 != None) else None)])
+  if not (x0 == y0 == None):
+    x0, y0 = x0-3, y0-3
+    x0, y0 = -y0, x0
+    x0, y0 = x0+3, y0+3
+  if not (x1 == y1 == None):
+    x1, y1 = x1-3, y1-3
+    x1, y1 = -y1, x1
+    x1, y1 = x1+3, y1+3
+  action90rot.append(move2action[(x0, y0, x1, y1)])
 
 
 class AtaxxGame(Game):
@@ -88,20 +102,26 @@ class AtaxxGame(Game):
     return player*board
   
   # TODO: implement symmetries
-  # def getSymmetries(self, board, pi):
-  #   assert(len(pi) == self.getActionSize())
-  #   move2pi = {}
-  #   for move, value in zip(action2move.values(), pi):
-  #     move2pi[move] = value
+  def getSymmetries(self, board, pi):
+    assert(len(pi) == self.getActionSize())
+    l = []
+    pi = pi[:]
 
-  #   for i in range(1, 5):
-  #     for j in [True, False]:
-  #       newB = np.rot90(board, i)
+    for i in range(4):
+      flipedBoard = np.fliplr(board)
+      flipedPi = [(actionflip[i], e) for i, e in enumerate(pi)]
+      flipedPi.sort()
+      flipedPi = [e for _, e in flipedPi]
 
-  #       if j:
-  #         newB = np.fliplr(newB)
-        
-  #       l += [(newB, list())]
+      l.append((flipedBoard, flipedPi))
+
+      board = np.rot90(board, i)
+      pi = [(action90rot[i], e) for i, e in enumerate(pi)]
+      pi.sort()
+      pi = [e for _, e in pi]
+      
+      l.append((board, pi))
+    return l
 
   def stringRepresentation(self, board):
     return board.tostring()
