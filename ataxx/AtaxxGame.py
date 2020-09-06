@@ -11,7 +11,7 @@ i = 0
 
 for x in range(7):
   for y in range(7):
-    action2move[i] = 0, 0, x, y
+    action2move[i] = None, None, x, y
     i += 1
 
 for x in range(7):
@@ -57,7 +57,7 @@ class AtaxxGame(Game):
     b.pieces = np.copy(board)
     move = action2move[action]
     b.execute_move(move, player)
-    return (b.pieces, -player)
+    return b.pieces, -player
 
   def getValidMoves(self, board, player):
     valids = [0]*self.getActionSize()
@@ -125,7 +125,7 @@ class AtaxxGame(Game):
       print(y, "|", end="")    # print the row #
       for x in range(n):
         piece = board[y][x]    # get the piece to print
-        print(OthelloGame.square_content[piece], end=" ")
+        print(AtaxxGame.square_content[piece], end=" ")
       print("|")
 
     print("-----------------------")

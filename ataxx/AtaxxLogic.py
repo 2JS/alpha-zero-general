@@ -39,7 +39,7 @@ class Board:
             dy = y1 - y0
             if self[x0][y0] == color and self[x1][y1] == 0:
               if (dx, dy) in _directions_1:
-                moves.append((0, 0, x1, y1))
+                moves.append((None, None, x1, y1))
               elif (dx, dy) in _directions_2:
                 moves.append((x0, y0, x1, y1))
     return moves
@@ -59,19 +59,22 @@ class Board:
   
   def execute_move(self, move, color):
     x0, y0, x1, y1 = move
-    dx, dy = x1-x0, y1-y0
-    
-    assert not (dx == dy == 0)
-    assert (-2 <= dx <= 2 and -2 <= dy <= 2) or (x0 == y0 == 0)
-    assert self[x0][y0] == color
+
     assert self[x1][y1] == 0
+    if x0 == y0 == None:
+      assert len([0 for _dx, _dy in _directions_1 if {x1+_dx, y1+_dy} <= set(range(7)) and self[x1+_dx][y1+_dy] == color]) > 0
+      
+      for _dx, _dy in _directions_1:
+        if {x1+_dx, y1+_dy} <= set(range(7)):
+          if self[x1+_dx][y1+_dy] == -color:
+            self[x1+_dx][y1+_dy] = color
+    else:
+      dx, dy = x1-x0, y1-y0
+      assert (-2 <= dx <= 2 and -2 <= dy <= 2)
+      assert self[x0][y0] == color
 
-    for _dx, _dy in _directions_1:
-      if self[x1+_dx][y1+_dy] == -color:
-        self[x1+_dx][y1+_dy] = color
-
-    if (dx, dy) in _directions_2:
-      self[x0][y0] = 0
+      if (dx, dy) in _directions_2:
+        self[x0][y0] = 0
     
     self[x1][y1] = color
 
