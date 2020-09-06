@@ -21,6 +21,8 @@ for x in range(7):
         action2move[i] = x, y, x+dx, y+dy
         i += 1
 
+action2move[i] = None, None, None, None
+
 move2action = {value:key for key, value in action2move.items()}
 
 
@@ -48,7 +50,7 @@ class AtaxxGame(Game):
   def getActionSize(self):
     # 49 for clone actions
     # 4 * (35 + 30 + 25 + 30) for move actions
-    return 529
+    return 530
 
   def getNextState(self, board, player, action):
     # if player takes action on board, return next (baord, player)
