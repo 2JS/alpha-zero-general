@@ -49,14 +49,14 @@ class AtaxxGame(Game):
     # 4 * (35 + 30 + 25 + 30) for move actions
     return 530
 
-  def getNextState(self, board, player, action):
+  def getNextState(self, board, player, action, turns):
     # if player takes action on board, return next (baord, player)
     # action must be a valid move
     b = Board()
     b.pieces = np.copy(board)
     move = action2move[action]
     b.execute_move(move, player)
-    return b.pieces, -player
+    return b.pieces, -player, turns+1
 
   def getValidMoves(self, board, player):
     valids = [0]*self.getActionSize()
@@ -64,15 +64,20 @@ class AtaxxGame(Game):
     b.pieces = np.copy(board)
     legalMoves = b.get_legal_moves(player)
     if len(legalMoves) == 0:
+      valids[-1]=1
       return np.array(valids)
     for x0, y0, x1, y1 in legalMoves:
       valids[move2action[x0, y0, x1, y1]] = 1
     return np.array(valids)
 
-  def getGameEnded(self, board, player):
+  def getGameEnded(self, board, player, turns):
     # return 0 if not ended, 1 if given player won, -1 if given player lost
     b = Board()
     b.pieces = np.copy(board)
+    if turns >= 512:
+      if b.countDiff(player) > 0:
+        return 1
+      return -1
     if b.has_legal_moves(player):
       return 0
     if b.has_legal_moves(-player):

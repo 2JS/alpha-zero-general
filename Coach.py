@@ -49,6 +49,7 @@ class Coach():
         board = self.game.getInitBoard()
         self.curPlayer = 1
         episodeStep = 0
+        turns = 0
 
         while True:
             episodeStep += 1
@@ -61,9 +62,9 @@ class Coach():
             #     trainExamples.append([b, self.curPlayer, p, None])
 
             action = np.random.choice(len(pi), p=pi)
-            board, self.curPlayer = self.game.getNextState(board, self.curPlayer, action)
+            board, self.curPlayer, turns = self.game.getNextState(board, self.curPlayer, action, turns)
 
-            r = self.game.getGameEnded(board, self.curPlayer)
+            r = self.game.getGameEnded(board, self.curPlayer, turns)
 
             if r != 0:
                 return [(x[0], x[2], r * ((-1) ** (x[1] != self.curPlayer))) for x in trainExamples]
