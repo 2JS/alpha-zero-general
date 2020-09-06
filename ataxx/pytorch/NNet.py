@@ -12,7 +12,7 @@ from NeuralNet import NeuralNet
 import torch
 import torch.optim as optim
 
-from .GermNNet import GermNNet as onnet
+from .AtaxxNNet import AtaxxNNet as onnet
 
 args = dotdict({
     'lr': 0.001,
@@ -26,7 +26,6 @@ args = dotdict({
 
 class NNetWrapper(NeuralNet):
     def __init__(self, game):
-        super().__init__(game)
         self.nnet = onnet(game, args)
         self.board_x, self.board_y = game.getBoardSize()
         self.action_size = game.getActionSize()

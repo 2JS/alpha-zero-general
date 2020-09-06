@@ -6,8 +6,6 @@ from othello.pytorch.NNet import NNetWrapper as nn
 from utils import *
 import sys
 
-sys.setrecursionlimit(50000)
-
 
 log = logging.getLogger(__name__)
 
@@ -39,9 +37,8 @@ if args.task == 'othello':
     from othello.pytorch.NNet import NNetWrapper as nn
 
 elif args.task == 'germ':
-    from germ.GermGame import GermGame as Game
-    from germ.pytorch.NNet import NNetWrapper as nn
-
+    from ataxx.AtaxxGame import AtaxxGame as Game
+    from ataxx.pytorch.NNet import NNetWrapper as nn
 
 def main():
 
