@@ -23,7 +23,7 @@ class HumanAtaxxPlayer:
     valid = self.game.getValidMoves(board, 1)
     for i in range(len(valid)):
       if valid[i]:
-        print("[", " ".join(action2move(i)), end="] ")
+        print("[", " ".join(action2move[i], end="] ")
     while True:
       input_move = input()
       input_a = input_move.split(" ")

@@ -6,8 +6,6 @@ from othello.pytorch.NNet import NNetWrapper as nn
 from utils import *
 import sys
 
-sys.setrecursionlimit(50000)
-
 
 log = logging.getLogger(__name__)
 

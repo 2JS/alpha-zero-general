@@ -6,24 +6,21 @@ from .AtaxxLogic import Board, _directions_1, _directions_2
 import numpy as np
 
 
-action2move = {}
-i = 0
+action2move = []
 
 for x in range(7):
   for y in range(7):
-    action2move[i] = None, None, x, y
-    i += 1
+    action2move.append((None, None, x, y))
 
 for x in range(7):
   for y in range(7):
     for dx, dy in _directions_2:
       if {x, y, x+dx, y+dy} <= set(range(7)):
-        action2move[i] = x, y, x+dx, y+dy
-        i += 1
+        action2move.append((x, y, x+dx, y+dy))
 
-action2move[i] = None, None, None, None
+action2move.append((None, None, None, None))
 
-move2action = {value:key for key, value in action2move.items()}
+move2action = {e:i for i, e in enumerate(action2move)}
 
 
 class AtaxxGame(Game):

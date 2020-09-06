@@ -60,6 +60,11 @@ class Board:
   def execute_move(self, move, color):
     x0, y0, x1, y1 = move
 
+    if x1 == y1 == None:
+      return
+    
+    if self[x1][y1] != 0:
+      print(self[x1][y1])
     assert self[x1][y1] == 0
     if x0 == y0 == None:
       assert len([0 for _dx, _dy in _directions_1 if {x1+_dx, y1+_dy} <= set(range(7)) and self[x1+_dx][y1+_dy] == color]) > 0
