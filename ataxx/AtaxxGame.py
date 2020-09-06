@@ -74,10 +74,8 @@ class AtaxxGame(Game):
     # return 0 if not ended, 1 if given player won, -1 if given player lost
     b = Board()
     b.pieces = np.copy(board)
-    if turns >= 512:
-      if b.countDiff(player) > 0:
-        return 1
-      return -1
+    if turns >= 256:
+      return 1 if b.countDiff(player) > 0 else -1
     if b.has_legal_moves(player):
       return 0
     if b.has_legal_moves(-player):

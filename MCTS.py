@@ -122,6 +122,8 @@ class MCTS():
         next_s, next_player, turns = self.game.getNextState(canonicalBoard, 1, a, turns)
         next_s = self.game.getCanonicalForm(next_s, next_player)
 
+        if turns > 256:
+            return 1
         v = self.search(next_s, turns)
 
         if (s, a) in self.Qsa:
