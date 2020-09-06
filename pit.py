@@ -1,12 +1,19 @@
 import Arena
 from MCTS import MCTS
-from othello.OthelloGame import OthelloGame
-from othello.OthelloPlayers import *
-from othello.pytorch.NNet import NNetWrapper as NNet
-
-
+from main import args
 import numpy as np
 from utils import *
+
+if args.task == 'othello':
+    from othello.OthelloGame import OthelloGame
+    from othello.OthelloPlayers import *
+    from othello.pytorch.NNet import NNetWrapper as NNet
+
+elif args.task == 'germ':
+    from germ.GermGame import GermGame as OthelloGame
+    from germ.GermPlayers import *
+    from germ.pytorch.NNet import NNetWrapper as NNet
+
 
 """
 use this script to play any two agents against each other, or play manually with
@@ -16,10 +23,8 @@ any agent.
 mini_othello = False  # Play in 6x6 instead of the normal 8x8.
 human_vs_cpu = True
 
-if mini_othello:
-    g = OthelloGame(6)
-else:
-    g = OthelloGame(8)
+
+g = OthelloGame(args.board_size)
 
 # all players
 rp = RandomPlayer(g).play
@@ -27,14 +32,20 @@ gp = GreedyOthelloPlayer(g).play
 hp = HumanOthelloPlayer(g).play
 
 
-
 # nnet players
 n1 = NNet(g)
-if mini_othello:
-    n1.load_checkpoint('./pretrained_models/othello/pytorch/','6x100x25_best.pth.tar')
-else:
-    n1.load_checkpoint('./pretrained_models/othello/pytorch/','8x8_100checkpoints_best.pth.tar')
-args1 = dotdict({'numMCTSSims': 50, 'cpuct':1.0})
+
+# # board_size = 6
+# if mini_othello:
+#     n1.load_checkpoint('./pretrained_models/othello/pytorch/', '6x100x25_best.pth.tar')
+# # board_size = 8
+# else:
+#     n1.load_checkpoint('./pretrained_models/othello/pytorch/', '8x8_100checkpoints_best.pth.tar')
+
+n1.load_checkpoint('./pretrained_models/germ/', 'temp.pth.tar')
+
+
+args1 = dotdict({'numMCTSSims': 50, 'cpuct': 1.0})
 mcts1 = MCTS(g, n1, args1)
 n1p = lambda x: np.argmax(mcts1.getActionProb(x, temp=0))
 

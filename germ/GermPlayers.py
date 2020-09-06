@@ -1,5 +1,5 @@
 import numpy as np
-
+from .GermLogic import dict
 
 class RandomPlayer:
     def __init__(self, game):
@@ -26,19 +26,18 @@ class HumanOthelloPlayer:
         while True:
             input_move = input()
             input_a = input_move.split(" ")
-            if len(input_a) == 2:
+            if len(input_a) == 4:
                 try:
-                    x, y = [int(i) for i in input_a]
-                    if ((0 <= x) and (x < self.game.n) and (0 <= y) and (y < self.game.n)) or \
-                            ((x == self.game.n) and (y == 0)):
-                        a = self.game.n * x + y if x != -1 else self.game.n ** 2
-                        if valid[a]:
-                            break
+                    x0, y0, x1, y1 = [int(i) for i in input_a]
+                    for key, value in dict.items():
+                        if value == ((x1, y1), (x0-x1, y0-y1)):
+                            if valid[key] == 1:
+                                return key
+
                 except ValueError:
                     # Input needs to be an integer
                     'Invalid integer'
             print('Invalid move')
-        return a
 
 
 class GreedyOthelloPlayer:

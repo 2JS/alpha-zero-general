@@ -6,7 +6,6 @@ from .GermLogic import Board, dict
 import numpy as np
 
 
-
 class GermGame(Game):
     square_content = {
         -1: "X",
