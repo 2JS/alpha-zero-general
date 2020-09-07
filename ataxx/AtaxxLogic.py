@@ -62,24 +62,21 @@ class Board:
 
     if x1 == y1 == None:
       return
-    
-    if self[x1][y1] != 0:
-      print(self[x1][y1])
+
     assert self[x1][y1] == 0
     if x0 == y0 == None:
       assert len([0 for _dx, _dy in _directions_1 if {x1+_dx, y1+_dy} <= set(range(7)) and self[x1+_dx][y1+_dy] == color]) > 0
-      
-      for _dx, _dy in _directions_1:
-        if {x1+_dx, y1+_dy} <= set(range(7)):
-          if self[x1+_dx][y1+_dy] == -color:
-            self[x1+_dx][y1+_dy] = color
+
     else:
       dx, dy = x1-x0, y1-y0
       assert (-2 <= dx <= 2 and -2 <= dy <= 2)
       assert self[x0][y0] == color
-
-      if (dx, dy) in _directions_2:
-        self[x0][y0] = 0
+      assert (dx, dy) in _directions_2
+      self[x0][y0] = 0
     
     self[x1][y1] = color
 
+    for _dx, _dy in _directions_1:
+      if {x1 + _dx, y1 + _dy} <= set(range(7)):
+        if self[x1 + _dx][y1 + _dy] == -color:
+          self[x1 + _dx][y1 + _dy] = color
