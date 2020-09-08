@@ -37,6 +37,8 @@ class HumanAtaxxPlayer:
         except ValueError:
           # Input needs to be an integer
           'Invalid integer'
+        except KeyError:
+          'Invalid move'
       print('Invalid move')
     return a
 
