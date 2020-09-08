@@ -23,13 +23,13 @@ class HumanAtaxxPlayer:
     valid = self.game.getValidMoves(board, 1)
     for i in range(len(valid)):
       if valid[i]:
-        print("[", action2move[i], end="] ")
+        print("(%s %s %s %s)" % action2move[i], end=" ")
     while True:
       input_move = input()
       input_a = input_move.split(" ")
       if len(input_a) == 4:
         try:
-          a = tuple(map((lambda x: None if x == 'None' else int(x)), input_a))
+          a = tuple(map((lambda x: None if x == 'n' else int(x)), input_a))
           print(a)
           a = move2action[a]
           print(a)
