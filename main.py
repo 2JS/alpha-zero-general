@@ -15,8 +15,17 @@ parser.add_argument("-t", "--updateThreshold", type=float, default=0.6, metavar=
 parser.add_argument("-m", "--mcts", type=int, default=25, metavar='N', help="Number of games moves for MCTS to simulate.")
 parser.add_argument("-a", "--arena", type=int, default=40, metavar='N', help="Number of games to play during arena play to determine if new net will be accepted.")
 parser.add_argument("-c", "--checkpoint", default='./temp/', metavar='PATH', help="Path to dir where checkpoints will be saved.")
+parser.add_argument("-f", "--model-file", default=None, metavar='PATH', help="")
 parser.add_argument("-y", "--history", type=int, default=20, metavar='N', help="Number of iterations for train examples history.")
 a = parser.parse_args()
+
+if a.model_file != None:
+    path = a.model_file.split('/')
+    model_dir = '/'.join(path[:-1])
+    model_file = path[-1]
+else:
+    model_dir = '/dev/models/8x100x50'
+    model_file = 'best.pth.tar'
 
 log = logging.getLogger(__name__)
 
@@ -32,9 +41,9 @@ args = dotdict({
     'arenaCompare': a.arena,         # Number of games to play during arena play to determine if new net will be accepted.
     'cpuct': 1,
 
-    'load_model': False,
     'checkpoint': a.checkpoint,
-    'load_folder_file': ('/dev/models/8x100x50', 'best.pth.tar'),
+    'load_model': True if a.model_file != None else False,
+    'load_folder_file': (model_dir, model_file),
     'numItersForTrainExamplesHistory': a.history,
     'task': 'germ',
     'board_size': 7
@@ -61,7 +70,7 @@ def main():
     nnet = nn(g)
 
     if args.load_model:
-        log.info('Loading checkpoint "%s/%s"...', args.load_folder_file)
+        log.info('Loading checkpoint "%s/%s"...', args.load_folder_file[0], args.load_folder_file[1])
         nnet.load_checkpoint(args.load_folder_file[0], args.load_folder_file[1])
     else:
         log.warning('Not loading a checkpoint!')
