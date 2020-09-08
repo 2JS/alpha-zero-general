@@ -51,8 +51,8 @@ class Board:
           for y1 in range(self.n):
             dx = x1 - x0
             dy = y1 - y0
-            if self[x0][y0] == color and self[x1][y1] == 0:
-              if (dx, dy) in _directions_1 or (dx, dy) in _directions_2:
+            if (dx, dy) in _directions_1 or (dx, dy) in _directions_2:
+              if self[x0][y0] == color and self[x1][y1] == 0:
                 return True
     
     return False
