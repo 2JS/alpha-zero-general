@@ -16,6 +16,7 @@ any agent.
 
 parser = argparse.ArgumentParser()
 parser.add_argument('-f', '--model-file', default='./temp/best.pth.tar', metavar='PATH', help='Path to model file. Default is ./temp/best.pth.tar')
+parser.add_argument('-n', '--mcts', default=300, type=int, metavar='N', help='Number of MCTS simulation per turn')
 # parser.add_argument('')
 a = parser.parse_args()
 
@@ -37,7 +38,7 @@ hp = HumanAtaxxPlayer(g).play
 # nnet players
 n1 = NNet(g)
 n1.load_checkpoint(model_dir, model_file)
-args1 = dotdict({'numMCTSSims': 50, 'cpuct':1.0})
+args1 = dotdict({'numMCTSSims': a.mcts, 'cpuct':1.0})
 mcts1 = MCTS(g, n1, args1)
 n1p = lambda x: np.argmax(mcts1.getActionProb(x, temp=0))
 
@@ -46,7 +47,7 @@ if human_vs_cpu:
 else:
     n2 = NNet(g)
     n2.load_checkpoint(model_dir, model_file)
-    args2 = dotdict({'numMCTSSims': 50, 'cpuct': 1.0})
+    args2 = dotdict({'numMCTSSims': a.mcts, 'cpuct': 1.0})
     mcts2 = MCTS(g, n2, args2)
     n2p = lambda x: np.argmax(mcts2.getActionProb(x, temp=0))
 
