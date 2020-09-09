@@ -16,7 +16,7 @@ any agent.
 
 parser = argparse.ArgumentParser()
 parser.add_argument('-f', '--model-file', default='./temp/best.pth.tar', metavar='PATH', help='Path to model file. Default is ./temp/best.pth.tar')
-parser.add_argument('-n', '--mcts', default=300, type=int, metavar='N', help='Number of MCTS simulation per turn')
+parser.add_argument('-m', '--mcts', default=300, type=int, metavar='N', help='Number of MCTS simulation per turn')
 # parser.add_argument('')
 a = parser.parse_args()
 
