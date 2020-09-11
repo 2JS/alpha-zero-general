@@ -16,6 +16,7 @@ parser.add_argument("-m", "--mcts", type=int, default=25, metavar='N', help="Num
 parser.add_argument("-a", "--arena", type=int, default=40, metavar='N', help="Number of games to play during arena play to determine if new net will be accepted.")
 parser.add_argument("-c", "--checkpoint", default='./temp/', metavar='PATH', help="Path to dir where checkpoints will be saved.")
 parser.add_argument("-f", "--model-file", default=None, metavar='PATH', help="")
+parser.add_argument("-x", "--examples-file", default="", metavar='PATH', help="")
 parser.add_argument("-y", "--history", type=int, default=20, metavar='N', help="Number of iterations for train examples history.")
 a = parser.parse_args()
 
@@ -80,7 +81,7 @@ def main():
 
     if args.load_model:
         log.info("Loading 'trainExamples' from file...")
-        c.loadTrainExamples()
+        c.loadTrainExamples(a.examples_file)
 
     log.info('Starting the learning process 🎉')
     c.learn()
