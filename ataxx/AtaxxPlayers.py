@@ -54,7 +54,7 @@ class GreedyAtaxxPlayer:
     for a in range(self.game.getActionSize()):
       if valids[a]==0:
         continue
-      nextBoard, _ = self.game.getNextState(board, 1, a)
+      nextBoard, _, _ = self.game.getNextState(board, 1, a, 0)
       score = self.game.getScore(nextBoard, 1)
       candidates += [(-score, a)]
     candidates.sort()
