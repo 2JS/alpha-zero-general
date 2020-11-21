@@ -9,9 +9,9 @@ import sys
 
 
 parser = argparse.ArgumentParser()
-parser.add_argument("-i", "--iters", type=int, default=5, metavar='N', help="Number of iteration")
+parser.add_argument("-i", "--iters", type=int, default=1000, metavar='N', help="Number of iteration")
 parser.add_argument("-e", "--eps", type=int, default=100, metavar='N', help="Number of complete self-play games")
-parser.add_argument("-t", "--updateThreshold", type=float, default=0.6, metavar='N', help="During arena playoff, new neural net will be accepted if threshold or more of games are won.")
+parser.add_argument("-t", "--updateThreshold", type=float, default=0.625, metavar='N', help="During arena playoff, new neural net will be accepted if threshold or more of games are won.")
 parser.add_argument("-m", "--mcts", type=int, default=25, metavar='N', help="Number of games moves for MCTS to simulate.")
 parser.add_argument("-a", "--arena", type=int, default=40, metavar='N', help="Number of games to play during arena play to determine if new net will be accepted.")
 parser.add_argument("-c", "--checkpoint", default='./temp/', metavar='PATH', help="Path to dir where checkpoints will be saved.")

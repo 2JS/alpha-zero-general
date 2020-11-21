@@ -18,15 +18,29 @@ args = dotdict({
     'lr': 0.0003,
     'dropout': 0.3,
     'epochs': 10,
-    'batch_size': 512,
+    'batch_size': 1024,
     'cuda': torch.cuda.is_available(),
     'num_channels': 512,
 })
 
+def numpy_replacer(n):
+    n[n == -1] = 0
+    return n
+
+
+def numpy_replacer2(n):
+    n[n == 1] = 0
+    n[n == -1] = 1
+    return n
+
+
+def change_numpy(data):
+    return np.array([numpy_replacer(data.copy()), numpy_replacer2(data.copy())])
+
 
 class NNetWrapper(NeuralNet):
     def __init__(self, game):
-        self.nnet = onnet(game, args)
+        self.nnet = onnet() # game, args
         self.board_x, self.board_y = game.getBoardSize()
         self.action_size = game.getActionSize()
 
@@ -51,6 +65,7 @@ class NNetWrapper(NeuralNet):
             for _ in t:
                 sample_ids = np.random.randint(len(examples), size=args.batch_size)
                 boards, pis, vs = list(zip(*[examples[i] for i in sample_ids]))
+                boards = tuple(map(change_numpy, boards))
                 boards = torch.FloatTensor(np.array(boards).astype(np.float64))
                 target_pis = torch.FloatTensor(np.array(pis))
                 target_vs = torch.FloatTensor(np.array(vs).astype(np.float64))
@@ -81,11 +96,11 @@ class NNetWrapper(NeuralNet):
         """
         # timing
         start = time.time()
-
+        board = change_numpy(board)
         # preparing input
         board = torch.FloatTensor(board.astype(np.float64))
         if args.cuda: board = board.contiguous().cuda()
-        board = board.view(1, self.board_x, self.board_y)
+        board = board.view(2, self.board_x, self.board_y)
         self.nnet.eval()
         with torch.no_grad():
             pi, v = self.nnet(board)

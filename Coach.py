@@ -1,6 +1,7 @@
 import logging
 import os
 import sys
+import math
 from collections import deque
 from pickle import Pickler, Unpickler
 from random import shuffle
@@ -123,6 +124,8 @@ class Coach():
             if pwins + nwins == 0 or float(nwins) / (pwins + nwins) < self.args.updateThreshold:
                 log.info('REJECTING NEW MODEL')
                 self.nnet.load_checkpoint(folder=self.args.checkpoint, filename='temp.pth.tar')
+                self.args.numMCTSSims = math.ceil(1.2 * self.args.numMCTSSims)
+                log.info('The value of numMCTSSims increased to %d' % (self.args.numMCTSSims))
             else:
                 log.info('ACCEPTING NEW MODEL')
                 self.nnet.save_checkpoint(folder=self.args.checkpoint, filename=self.getCheckpointFile(i))
