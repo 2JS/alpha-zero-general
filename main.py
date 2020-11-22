@@ -46,18 +46,18 @@ args = dotdict({
     'load_model': True if a.model_file != None else False,
     'load_folder_file': (model_dir, model_file),
     'numItersForTrainExamplesHistory': a.history,
-    'task': 'germ',
+    'task': 'ataxx',
     'board_size': 7
 })
 
-assert args.task in ['othello', 'germ']
+assert args.task in ['othello', 'ataxx']
 assert args.board_size > 0
 
 if args.task == 'othello':
     from othello.OthelloGame import OthelloGame as Game
     from othello.pytorch.NNet import NNetWrapper as nn
 
-elif args.task == 'germ':
+elif args.task == 'ataxx':
     from ataxx.AtaxxGame import AtaxxGame as Game
     from ataxx.pytorch.NNet import NNetWrapper as nn
 

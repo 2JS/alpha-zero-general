@@ -12,7 +12,7 @@ from torch.autograd import Variable
 
 
 class ResidualBlock(nn.Module):
-    def __init__(self, size=7, channel=64):
+    def __init__(self, size=7, channel=128):
         super(ResidualBlock, self).__init__()
         self.size = size
         self.channel = channel
@@ -37,20 +37,19 @@ class AtaxxNNet(nn.Module):
         self.size = size
         
         super(AtaxxNNet, self).__init__()
-        self.conv1a = nn.Conv2d(2, 32, kernel_size=3, padding=1, bias=False)
-        self.conv1b = nn.Conv2d(2, 16, kernel_size=5, padding=2, bias=False)
-        self.conv1c = nn.Conv2d(2, 16, kernel_size=7, padding=3, bias=False)
+        self.conv1a = nn.Conv2d(2, 64, kernel_size=3, padding=1, bias=False)
+        self.conv1b = nn.Conv2d(2, 64, kernel_size=5, padding=2, bias=False)
         self.relu = nn.LeakyReLU(inplace=True)
-        self.bn1 = nn.BatchNorm2d(64)
+        self.bn1 = nn.BatchNorm2d(128)
 
         self.res_layers = nn.Sequential(*[ResidualBlock() for i in range(19)])
 
-        self.conv_val = nn.Conv2d(64, 1, kernel_size=1, bias=False)
+        self.conv_val = nn.Conv2d(128, 1, kernel_size=1, bias=False)
         self.bn_val = nn.BatchNorm2d(1)
         self.fc_val1 = nn.Linear(size*size, size*size)
         self.fc_val2 = nn.Linear(size*size, 1)
 
-        self.conv_pol = nn.Conv2d(64, 24, kernel_size=1, bias=False)
+        self.conv_pol = nn.Conv2d(128, 24, kernel_size=1, bias=False)
         self.bn_pol = nn.BatchNorm2d(24)
         self.fc_pol = nn.Linear(24*size*size, 530)
         
@@ -59,8 +58,7 @@ class AtaxxNNet(nn.Module):
 
         xa = self.relu(self.conv1a(x))
         xb = self.relu(self.conv1b(x))
-        xc = self.relu(self.conv1c(x))
-        x = torch.cat((xa, xb, xc), dim=1)
+        x = torch.cat((xa, xb), dim=1)
         x = self.bn1(x)
         x = self.relu(x)
 

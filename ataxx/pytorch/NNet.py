@@ -16,11 +16,9 @@ from .AtaxxNNet import AtaxxNNet as onnet
 
 args = dotdict({
     'lr': 0.0003,
-    'dropout': 0.3,
     'epochs': 10,
-    'batch_size': 1024,
-    'cuda': torch.cuda.is_available(),
-    'num_channels': 512,
+    'batch_size': 2048,
+    'cuda': torch.cuda.is_available()
 })
 
 def numpy_replacer(n):
