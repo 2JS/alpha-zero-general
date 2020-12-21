@@ -4,6 +4,7 @@ import sys
 from collections import deque
 from pickle import Pickler, Unpickler
 from random import shuffle
+from torch.multiprocessing import Pool
 
 import numpy as np
 from tqdm import tqdm
@@ -12,6 +13,12 @@ from Arena import Arena
 from MCTS import MCTS
 
 log = logging.getLogger(__name__)
+
+
+def new_episode(coach):
+    new_coach = Coach(coach.game, coach.nnet, coach.args)
+    new_coach.mcts = MCTS(new_coach.game, new_coach.nnet, new_coach.args)
+    return new_coach.executeEpisode()
 
 
 class Coach():
@@ -85,9 +92,11 @@ class Coach():
             if not self.skipFirstSelfPlay or i > 1:
                 iterationTrainExamples = deque([], maxlen=self.args.maxlenOfQueue)
 
-                for _ in tqdm(range(self.args.numEps), desc="Self Play"):
-                    self.mcts = MCTS(self.game, self.nnet, self.args)  # reset search tree
-                    iterationTrainExamples += self.executeEpisode()
+                with Pool(10) as p:
+                    results = list(tqdm(p.imap(new_episode, 100 * [self]), total=100, desc="Self Play"))
+
+                for result in results:
+                    iterationTrainExamples += result
 
                 # save the iteration examples to the history 
                 self.trainExamplesHistory.append(iterationTrainExamples)

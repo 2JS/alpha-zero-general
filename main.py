@@ -1,3 +1,4 @@
+from torch.multiprocessing import set_start_method
 import argparse
 import logging
 import coloredlogs
@@ -52,6 +53,11 @@ args = dotdict({
 
 assert args.task in ['othello', 'germ']
 assert args.board_size > 0
+
+try:
+    set_start_method('spawn')
+except RuntimeError:
+    pass
 
 if args.task == 'othello':
     from othello.OthelloGame import OthelloGame as Game
