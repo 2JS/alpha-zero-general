@@ -94,6 +94,8 @@ class Coach():
 
                 with Pool(10) as p:
                     results = list(tqdm(p.imap(new_episode, 100 * [self]), total=100, desc="Self Play"))
+                p.terminate()
+                p.join()
 
                 for result in results:
                     iterationTrainExamples += result
