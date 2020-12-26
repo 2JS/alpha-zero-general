@@ -1,8 +1,54 @@
 import logging
 
 from tqdm import tqdm
+from torch.multiprocessing import Pool
+import numpy as np
+import copy
 
 log = logging.getLogger(__name__)
+
+
+def play_games(pmcts, nmcts, game, num):
+
+
+    num = int(num / 2)
+    one_won = 0
+    two_won = 0
+    draws = 0
+
+    with Pool(10) as p:
+        game_results = list(tqdm(p.imap_unordered(player1_vs_player2, num * [(pmcts, nmcts, game)]), total=num, desc="Arena.playGames (1)"))
+    p.terminate()
+    p.join()
+
+    for game_result in game_results:
+        if game_result == 1:
+            one_won += 1
+        elif game_result == -1:
+            two_won += 1
+        else:
+            draws += 1
+
+    with Pool(10) as p:
+        game_results = list(tqdm(p.imap_unordered(player1_vs_player2, num * [(nmcts, pmcts, game)]), total=num, desc="Arena.playGames (2)"))
+    p.terminate()
+    p.join()
+
+    for game_result in game_results:
+        if game_result == 1:
+            one_won += 1
+        elif game_result == -1:
+            two_won += 1
+        else:
+            draws += 1
+
+    return one_won, two_won, draws
+
+
+def player1_vs_player2(player_and_game):
+    nmcts, pmcts, game = player_and_game
+    arena = Arena(copy.deepcopy(nmcts), copy.deepcopy(pmcts), copy.deepcopy(game))
+    return arena.playGame()
 
 
 class Arena():
@@ -47,7 +93,8 @@ class Arena():
                 assert self.display
                 print("Turn ", str(it), "Player ", str(curPlayer))
                 self.display(board)
-            action = players[curPlayer + 1](self.game.getCanonicalForm(board, curPlayer))
+
+            action = np.argmax(players[curPlayer + 1].getActionProb(self.game.getCanonicalForm(board, curPlayer), temp=0))
 
             valids = self.game.getValidMoves(self.game.getCanonicalForm(board, curPlayer), 1)
 

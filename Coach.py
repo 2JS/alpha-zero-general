@@ -9,7 +9,7 @@ from torch.multiprocessing import Pool
 import numpy as np
 from tqdm import tqdm
 
-from Arena import Arena
+from Arena import Arena, play_games
 from MCTS import MCTS
 
 log = logging.getLogger(__name__)
@@ -93,7 +93,7 @@ class Coach():
                 iterationTrainExamples = deque([], maxlen=self.args.maxlenOfQueue)
 
                 with Pool(10) as p:
-                    results = list(tqdm(p.imap(new_episode, 100 * [self]), total=100, desc="Self Play"))
+                    results = list(tqdm(p.imap_unordered(new_episode, self.args.numEps * [self]), total=self.args.numEps, desc="Self Play"))
                 p.terminate()
                 p.join()
 
@@ -126,9 +126,10 @@ class Coach():
             nmcts = MCTS(self.game, self.nnet, self.args)
 
             log.info('PITTING AGAINST PREVIOUS VERSION')
-            arena = Arena(lambda x: np.argmax(pmcts.getActionProb(x, temp=0)),
-                          lambda x: np.argmax(nmcts.getActionProb(x, temp=0)), self.game)
-            pwins, nwins, draws = arena.playGames(self.args.arenaCompare)
+            pwins, nwins, draws = play_games(pmcts,
+                                             nmcts,
+                                             self.game,
+                                             self.args.arenaCompare)
 
             log.info('NEW/PREV WINS : %d / %d ; DRAWS : %d' % (nwins, pwins, draws))
             if pwins + nwins == 0 or float(nwins) / (pwins + nwins) < self.args.updateThreshold:
